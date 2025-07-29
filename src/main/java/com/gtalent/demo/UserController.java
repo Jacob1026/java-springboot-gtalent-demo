@@ -1,7 +1,8 @@
 package com.gtalent.demo;
 
 import com.gtalent.demo.models.User;
-import org.apache.coyote.Response;
+import com.gtalent.demo.requests.CreateUserRequest;
+import com.gtalent.demo.responses.CreateUserRespone;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,13 +70,16 @@ public class UserController {
     }
     //新增使用者要新的記憶體位置所以要new
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User request){
+//    原本用User,把回覆跟請求都用一個Class去過濾資料，避免資料外流
+    public ResponseEntity<CreateUserRespone> createUser(@RequestBody CreateUserRequest request){
 //        方法1: new user id = 把map裡面最大的ID找出來+1
 //        方法2:用計數器
         int newId = atomicInteger.getAndIncrement();
         User user = new User(newId ,request.getUsername(),request.getEmail());
         mockUser.put(newId,user);
-        return ResponseEntity.ok(user);
+        //序列化回傳Jason
+        CreateUserRespone respone = new CreateUserRespone(user.getUsername());
+        return new ResponseEntity<>(respone, HttpStatus.CREATED);
     }
 //    刪除使用者ById
     @DeleteMapping("/{id}")
