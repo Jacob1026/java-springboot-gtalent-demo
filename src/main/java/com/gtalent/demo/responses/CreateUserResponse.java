@@ -1,9 +1,9 @@
 package com.gtalent.demo.responses;
 
-public class CreateUserRespone {
+public class CreateUserResponse {
     private String username;
 
-    public CreateUserRespone(String username) {
+    public CreateUserResponse(String username) {
         this.username = username;
     }
 
