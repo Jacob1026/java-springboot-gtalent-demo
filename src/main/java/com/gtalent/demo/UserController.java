@@ -107,9 +107,9 @@ public class UserController {
     public  ResponseEntity<List<GetUserResponse>>searchUser(@RequestParam String keyword){
         List<GetUserResponse> results =mockUser.values()
                                             .stream()
-                                            //filter過濾User，宣告 user 變數
+                                            //宣告 user 變數，filter過濾符合條件User資料，結果為T的
                                             .filter(user -> user.getUsername().toLowerCase().contains(keyword.toLowerCase()))
-                                            //加工 map(user -> new GetUserResponse(user)) 又因型態是User故GetUserRespons建構子裡要有符合Usesr型態的
+                                            //加工mapping map(user -> new GetUserResponse(user)) 又因型態是User故GetUserRespons建構子裡要有符合Usesr型態的
                                             .map(GetUserResponse :: new)
                                             .toList();
 //                                           .map(this::toGetUserResponse)
@@ -120,6 +120,17 @@ public class UserController {
 //        }
         return ResponseEntity.ok(results);
 
+    }
+
+    @GetMapping("/normal")
+    public ResponseEntity<List<GetUserResponse>>getNormallUser(){
+        List<GetUserResponse> getNormallUser =mockUser.values()
+                .stream()
+//                .filter(Predicate.not(user -> user.getUsername() 反轉filter為T的結果
+                .filter(user -> !user.getUsername().toLowerCase().contains("admin"))
+                .map(GetUserResponse :: new)
+                .toList();
+        return ResponseEntity.ok(getNormallUser);
     }
 
     private GetUserResponse toGetUserResponse (User user){
