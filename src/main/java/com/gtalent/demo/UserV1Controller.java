@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/users")
-
+@CrossOrigin("*")
 public class UserV1Controller {
 //    注入1-@Autowired
 //    private  JdbcTemplate jdbcTemplate;
@@ -86,6 +86,13 @@ public class UserV1Controller {
         }else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/search")
+    public  ResponseEntity<List<GetUserResponse>>searchUser(@RequestParam String keyword) {
+        String sql ="SELECT * FROM users WHERE LOWER(username) LIKE ?";
+        List<User> users = jbdcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), keyword.toLowerCase());
+        List<GetUserResponse> response = users.stream().map(GetUserResponse::new).toList();
+        return ResponseEntity.ok(response);
     }
 
 
