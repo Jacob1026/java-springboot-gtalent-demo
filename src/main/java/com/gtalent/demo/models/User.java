@@ -1,8 +1,17 @@
 package com.gtalent.demo.models;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="Users")
+
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name="username")
     private String username;
+    @Column(name="email")
     private String email;
 
     public User(int id, String username, String email) {
