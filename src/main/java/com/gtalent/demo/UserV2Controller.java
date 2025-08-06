@@ -56,15 +56,14 @@ public class UserV2Controller {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         User savedUser =userRepository.save(user);
-        GetUserResponse response =new GetUserResponse(user);
+        GetUserResponse response =new GetUserResponse(savedUser);
         return  ResponseEntity.ok(response);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<GetUserResponse>deleteUserById(@PathVariable int id){
-        Optional <User> user = userRepository.findById(id);
-        userRepository.delete(user.get());
+    public ResponseEntity<Void>deleteUserById(@PathVariable int id){
+        userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
