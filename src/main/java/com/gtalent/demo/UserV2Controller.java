@@ -6,6 +6,7 @@ import com.gtalent.demo.requests.CreateUserRequest;
 import com.gtalent.demo.requests.UpdateUserRequest;
 import com.gtalent.demo.responses.CreateUserResponse;
 import com.gtalent.demo.responses.GetUserResponse;
+import com.gtalent.demo.responses.UpdateUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,28 +36,34 @@ public class UserV2Controller {
     @GetMapping({"/{id}"})
     public  ResponseEntity<GetUserResponse>getUserById(@PathVariable int id){
         Optional <User> user = userRepository.findById(id);
-        GetUserResponse response =new GetUserResponse(user.get());
-        return ResponseEntity.ok(response);
+        if(user.isPresent()){
+            GetUserResponse response =new GetUserResponse(user.get());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.noContent().build();
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<GetUserResponse>updateUserById(@PathVariable int id ,@RequestBody UpdateUserRequest request){
+    public ResponseEntity<UpdateUserResponse>updateUserById(@PathVariable int id , @RequestBody UpdateUserRequest request){
         Optional <User> user = userRepository.findById(id);
-        User updateUser =user.get();
-        updateUser.setUsername(request.getUserName());
-        User savedUser =userRepository.save(updateUser);
-        GetUserResponse response =new GetUserResponse(savedUser);
-        return  ResponseEntity.ok(response);
+        if(user.isPresent()){
+            User updateUser =user.get();
+            updateUser.setUsername(request.getUserName());
+            User savedUser =userRepository.saveAndFlush(updateUser);
+            UpdateUserResponse response =new UpdateUserResponse(savedUser.getUsername());
+            return  ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
     }
     //user物件裡面沒有ID所以程式會知道是create
     @PostMapping
-    public ResponseEntity<GetUserResponse>createUser(@RequestBody CreateUserRequest request){
+    public ResponseEntity<CreateUserResponse>createUser(@RequestBody CreateUserRequest request){
         User user =new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         User savedUser =userRepository.save(user);
-        GetUserResponse response =new GetUserResponse(savedUser);
+        CreateUserResponse response =new CreateUserResponse(savedUser.getUsername());
         return  ResponseEntity.ok(response);
     }
 
