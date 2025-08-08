@@ -1,11 +1,9 @@
-package com.gtalent.demo;
+package com.gtalent.demo.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Scanner;
 
 @RestController  //為了Springboot 框架:控制器
 public class HellowController {

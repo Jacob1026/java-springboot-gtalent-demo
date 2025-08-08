@@ -1,9 +1,8 @@
-package com.gtalent.demo;
+package com.gtalent.demo.controllers;
 
 import com.gtalent.demo.models.User;
 import com.gtalent.demo.requests.CreateUserRequest;
 import com.gtalent.demo.requests.UpdateUserRequest;
-import com.gtalent.demo.responses.AllUserResponse;
 import com.gtalent.demo.responses.CreateUserResponse;
 import com.gtalent.demo.responses.GetUserResponse;
 import com.gtalent.demo.responses.UpdateUserResponse;

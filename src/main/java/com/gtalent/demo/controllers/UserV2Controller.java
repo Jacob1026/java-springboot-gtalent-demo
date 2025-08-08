@@ -1,4 +1,4 @@
-package com.gtalent.demo;
+package com.gtalent.demo.controllers;
 
 import com.gtalent.demo.models.User;
 import com.gtalent.demo.repositories.UserRepository;
@@ -74,5 +74,13 @@ public class UserV2Controller {
         return ResponseEntity.noContent().build();
     }
 
-
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void>deleteUserById2(@PathVariable int id) {
+//        if (userRepository.existsById(id)) {
+//            userRepository.deleteById(id);
+//            return ResponseEntity.noContent().build();
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 }

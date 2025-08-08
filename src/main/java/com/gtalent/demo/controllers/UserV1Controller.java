@@ -1,4 +1,4 @@
-package com.gtalent.demo;
+package com.gtalent.demo.controllers;
 
 import com.gtalent.demo.models.User;
 import com.gtalent.demo.requests.CreateUserRequest;
