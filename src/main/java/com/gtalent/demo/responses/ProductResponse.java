@@ -9,6 +9,8 @@ public class ProductResponse {
     private BigDecimal price;
     private double quantity;
     private int status;
+    private SupplierResponse supplier;
+
 
     public ProductResponse(String name, BigDecimal price, double quantity, int status) {
         this.name = name;
@@ -21,6 +23,13 @@ public class ProductResponse {
         this.price = product.getPrice();
         this.quantity =product.getQuantity();
         this.status = product.getStatus();
+    }
+    public SupplierResponse getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(SupplierResponse supplier) {
+        this.supplier = supplier;
     }
 
     public String getName() {

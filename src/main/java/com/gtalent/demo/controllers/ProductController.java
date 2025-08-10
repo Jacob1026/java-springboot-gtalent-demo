@@ -17,34 +17,55 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
 @CrossOrigin("*")
 public class ProductController {
     private final ProductRepository productRepository;
+    private final SupplierRepository supplierRepository;
 
 
     @Autowired
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository, SupplierRepository supplierRepository) {
         this.productRepository = productRepository;
+        this.supplierRepository = supplierRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return  ResponseEntity.ok(products.stream().map(ProductResponse::new ).toList());
+// 1. 使用 stream 將 List<Product> 轉換成 List<ProductResponse>
+        List<ProductResponse> productResponses = productRepository.findAll()
+                .stream().map(product -> {
+            // 在 map 中，目標是建立並回傳一個設定好的 ProductResponse 物件
+            ProductResponse response = new ProductResponse(product); // 假設建構子只複製基本欄位
+
+            // 在 Controller 中進行 null 檢查
+            if (product.getSupplier() != null) {
+                response.setSupplier(new SupplierResponse(product.getSupplier()));
+            }
+            // map 的結尾是回傳轉換好的 response 物件，而不是 ResponseEntity
+            return response;
+        }).collect(Collectors.toList());
+
+        // 2. 將整個轉換好的列表放進一個 ResponseEntity.ok() 中回傳
+        return ResponseEntity.ok(productResponses);
     }
 
     /**
      * 根據 ID 獲取單一產品
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Integer id) {
-        // 使用 Optional 的 map 和 orElseGet 讓程式碼更優雅
-        return productRepository.findById(id)
-                .map(product -> ResponseEntity.ok(new ProductResponse(product)))
-                .orElseGet(() -> ResponseEntity.notFound().build()); // 若找不到產品，回傳 404 Not Found
+    public ResponseEntity<ProductResponse> getProductsById(@PathVariable int id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()) {
+            ProductResponse response = new ProductResponse(product.get());
+            response.setSupplier(new SupplierResponse(product.get().getSupplier()));
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /**
@@ -53,22 +74,22 @@ public class ProductController {
      */
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
-        // 1. 根據請求(request)建立一個新的 Product 實體物件
-        Product newProduct = new Product();
-        newProduct.setName(request.getName());
-        newProduct.setPrice(request.getPrice());
-        newProduct.setQuantity(request.getQuantity());
-        // 假設 Product 實體有 status 欄位
-        // newProduct.setStatus(1); // 可在此設定預設狀態
+        Optional<Supplier>supplier = supplierRepository.findById(request.getSupplierId());
+        if(supplier.isPresent()){
+            Product newProduct = new Product();
+            newProduct.setName(request.getName());
+            newProduct.setPrice(request.getPrice());
+            newProduct.setQuantity(request.getQuantity());
+            newProduct.setStatus(request.getStatus());
+            newProduct.setSupplier(supplier.get());
+            Product savedProduct = productRepository.save(newProduct);
+            ProductResponse response = new ProductResponse(savedProduct);
+            response.setSupplier(supplier.map(SupplierResponse::new).get());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }else {
+            return ResponseEntity.notFound().build();
+        }
 
-        // 2. 將新產品存入資料庫
-        Product savedProduct = productRepository.save(newProduct);
-
-        // 3. 將儲存後的產品轉換為回應(response)格式
-        ProductResponse response = new ProductResponse(savedProduct);
-
-        // 4. 回傳 201 Created 狀態碼，並在 body 中附上新建立的資源
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     /**
@@ -79,17 +100,11 @@ public class ProductController {
         Optional<Product> optionalProduct = productRepository.findById(id);
 
         if (optionalProduct.isPresent()) {
-            // 1. 從資料庫中獲取該產品
             Product existingProduct = optionalProduct.get();
-            // 2. 更新產品屬性
             existingProduct.setName(request.getName());
             existingProduct.setPrice(request.getPrice());
             existingProduct.setQuantity(request.getQuantity());
-
-            // 3. 儲存更新後的產品
             Product updatedProduct = productRepository.save(existingProduct);
-
-            // 4. 建立回應並回傳 200 OK
             ProductResponse response = new ProductResponse(updatedProduct);
             return ResponseEntity.ok(response);
         } else {

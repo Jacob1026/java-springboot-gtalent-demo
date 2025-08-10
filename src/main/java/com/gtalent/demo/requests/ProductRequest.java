@@ -6,6 +6,24 @@ public class ProductRequest {
     private String name;
     private BigDecimal price;
     private int quantity;
+    private int status;
+    private int supplierId;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(int supplierId) {
+        this.supplierId = supplierId;
+    }
 
     public ProductRequest(String name, BigDecimal price, int quantity) {
         this.name = name;

@@ -2,6 +2,8 @@ package com.gtalent.demo.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="supplier")
 public class Supplier {
@@ -16,9 +18,9 @@ public class Supplier {
     private String phone;
     @Column(name="email")
     private String email;
-    @ManyToOne
-    @JoinColumn(name ="supplier_id")
-    private Supplier supplier;
+    @OneToMany
+    @JoinColumn(name ="id")
+    private List<Product> products;
 
     public Supplier(int id, String name, String address, String phone, String email, Supplier supplier) {
         this.id = id;
@@ -26,7 +28,6 @@ public class Supplier {
         this.address = address;
         this.phone = phone;
         this.email = email;
-        this.supplier = supplier;
     }
 
     public Supplier() {
@@ -73,11 +74,4 @@ public class Supplier {
         this.email = email;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
 }
