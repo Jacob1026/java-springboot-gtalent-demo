@@ -11,18 +11,17 @@ public class Product {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id ;
-
    @Column(name="name")
    private String name;
-
    @Column(name="price")
    private BigDecimal price;
-
    @Column(name="quantity")
    private int quantity;
-
-    @Column(name="status")
+   @Column(name="status")
    private int status;
+   @ManyToOne
+   @JoinColumn(name ="supplier_id")
+   private Supplier supplier;
 
     public Product(int id, String name, BigDecimal price, int quantity, int status) {
         this.id = id;
@@ -31,11 +30,9 @@ public class Product {
         this.quantity = quantity;
         this.status = status;
     }
-
-    public Product() {
+    public Product (){
 
     }
-
     public int getId() {
         return id;
     }
@@ -74,5 +71,13 @@ public class Product {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 }

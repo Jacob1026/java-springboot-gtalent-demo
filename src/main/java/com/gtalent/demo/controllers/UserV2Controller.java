@@ -1,5 +1,6 @@
 package com.gtalent.demo.controllers;
 
+import com.gtalent.demo.models.Supplier;
 import com.gtalent.demo.models.User;
 import com.gtalent.demo.repositories.UserRepository;
 import com.gtalent.demo.requests.CreateUserRequest;
@@ -36,6 +37,7 @@ public class UserV2Controller {
     @GetMapping({"/{id}"})
     public  ResponseEntity<GetUserResponse>getUserById(@PathVariable int id){
         Optional <User> user = userRepository.findById(id);
+
         if(user.isPresent()){
             GetUserResponse response =new GetUserResponse(user.get());
             return ResponseEntity.ok(response);

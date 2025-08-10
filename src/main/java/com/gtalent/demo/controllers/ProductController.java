@@ -1,8 +1,10 @@
 package com.gtalent.demo.controllers;
 
 import com.gtalent.demo.models.Product;
+import com.gtalent.demo.models.Supplier;
 import com.gtalent.demo.models.User;
 import com.gtalent.demo.repositories.ProductRepository;
+import com.gtalent.demo.repositories.SupplierRepository;
 import com.gtalent.demo.repositories.UserRepository;
 import com.gtalent.demo.requests.CreateUserRequest;
 import com.gtalent.demo.requests.ProductRequest;
@@ -22,6 +24,7 @@ import java.util.Optional;
 public class ProductController {
     private final ProductRepository productRepository;
 
+
     @Autowired
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -30,11 +33,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        // 使用 stream 將 Product 列表轉換為 ProductResponse 列表
-        List<ProductResponse> response = products.stream()
-                .map(ProductResponse::new) // 等同於 product -> new ProductResponse(product)
-                .toList();
-        return ResponseEntity.ok(response);
+        return  ResponseEntity.ok(products.stream().map(ProductResponse::new ).toList());
     }
 
     /**
@@ -82,7 +81,6 @@ public class ProductController {
         if (optionalProduct.isPresent()) {
             // 1. 從資料庫中獲取該產品
             Product existingProduct = optionalProduct.get();
-
             // 2. 更新產品屬性
             existingProduct.setName(request.getName());
             existingProduct.setPrice(request.getPrice());
