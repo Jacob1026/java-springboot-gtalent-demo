@@ -61,6 +61,7 @@ public class ProductController {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
             ProductResponse response = new ProductResponse(product.get());
+            //因為 Optional 這個類別本身沒有定義 getSupplier 這個方法，它只有 get(), isPresent(), orElse() 等用來操作「盒子」本身的方法。
             response.setSupplier(new SupplierResponse(product.get().getSupplier()));
             return ResponseEntity.ok(response);
         } else {
@@ -75,6 +76,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
         Optional<Supplier>supplier = supplierRepository.findById(request.getSupplierId());
+        //因為Product還未存在
         if(supplier.isPresent()){
             Product newProduct = new Product();
             newProduct.setName(request.getName());
