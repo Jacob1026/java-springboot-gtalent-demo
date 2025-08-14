@@ -1,8 +1,14 @@
 package com.gtalent.demo.controllers;
 
+import com.gtalent.demo.models.Product;
 import com.gtalent.demo.models.User;
 import com.gtalent.demo.repositories.UserRepository;
+import com.gtalent.demo.requests.CreateUserRequest;
 import com.gtalent.demo.requests.LoginRequest;
+import com.gtalent.demo.requests.RegistrationRequest;
+import com.gtalent.demo.responses.CreateUserResponse;
+import com.gtalent.demo.responses.ProductResponse;
+import com.gtalent.demo.responses.SupplierResponse;
 import com.gtalent.demo.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +56,18 @@ public class SessionAuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/register"){
+    @PostMapping("/register")
+        public ResponseEntity<?>registerUser(@RequestBody RegistrationRequest request){
+        if(userRepository.findByUsername(request.getUsername()).isPresent()){
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("帳號已存在");
+        }
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        userRepository.save(user);
 
+        return ResponseEntity.status(HttpStatus.CREATED).body("註冊成功");
     }
+
 }
