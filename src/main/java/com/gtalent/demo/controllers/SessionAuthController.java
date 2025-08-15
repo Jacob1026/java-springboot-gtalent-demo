@@ -57,7 +57,7 @@ public class SessionAuthController {
     }
 
     @PostMapping("/register")
-        public ResponseEntity<?>registerUser(@RequestBody RegistrationRequest request){
+        public ResponseEntity<?>registerUser(@RequestBody RegistrationRequest request,HttpSession session){
         if(userRepository.findByUsername(request.getUsername()).isPresent()){
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("帳號已存在");
         }
@@ -66,6 +66,7 @@ public class SessionAuthController {
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
         userRepository.save(user);
+        session.setAttribute("userId",user.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body("註冊成功");
     }
