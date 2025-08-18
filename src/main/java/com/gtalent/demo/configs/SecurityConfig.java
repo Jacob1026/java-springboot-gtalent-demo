@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+//設定檔需加@Configuration，@EnableWebSecurity讀取
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

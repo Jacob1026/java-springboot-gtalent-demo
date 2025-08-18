@@ -28,19 +28,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected  void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
-        String authHeader =request.getHeader("Authrization");
+        String authHeader =request.getHeader("Authorization");
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
         String jwtToken = authHeader.substring(7);
-        String username = JwtService.getUsernameFromToken(jwtToken);
+        String username = jwtService.getUsernameFromToken(jwtToken);
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
            Optional<User>  user = userRepository.findByUsername(username);
            if(user.isPresent()){
-               List<? extends GrantedAuthority> authorities = getUserAuthorities();
-               UsernamePasswordAuthenticationToken authenticationToken =new UsernamePasswordAuthenticationToken(user.get(),null);
+               List<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+               UsernamePasswordAuthenticationToken authenticationToken =new UsernamePasswordAuthenticationToken(user.get(),null,authorities);
                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
            }
         }
