@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/jwt/**").permitAll()
                         .requestMatchers("/session/**").permitAll()
+                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v2/users/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v2/users/**").hasRole("ADMIN")
