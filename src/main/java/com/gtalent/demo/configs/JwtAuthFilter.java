@@ -20,7 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter
+//驗證流程的核心：基於 OncePerRequestFilter 自定義的一個過濾器 JwtAuthFilter
+//確保每個請求都會經過此過濾器一次
+{
     @Autowired
     private JwtService jwtService;
     @Autowired
@@ -39,16 +42,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
            Optional<User>  user = userRepository.findByUsername(username);
            if(user.isPresent()){
-               List<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+               List<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.get().getRole()));
                UsernamePasswordAuthenticationToken authenticationToken =new UsernamePasswordAuthenticationToken(user.get(),null,authorities);
                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
            }
         }
         filterChain.doFilter(request,response);
-    }
-
-    private List<? extends GrantedAuthority> getUserAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
 }

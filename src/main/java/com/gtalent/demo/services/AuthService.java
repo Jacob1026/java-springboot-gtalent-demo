@@ -6,6 +6,7 @@ import com.gtalent.demo.requests.LoginRequest;
 import com.gtalent.demo.requests.RegistrationRequest;
 import com.gtalent.demo.responses.AuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,13 +17,15 @@ public class AuthService {
     private UserRepository userRepository;
     @Autowired
     private  JwtService jwtService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public AuthResponse register(RegistrationRequest request) {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setRole("ROLE_USER");
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(user.getRole());
         userRepository.save(user);
         String jwtToken = jwtService.generateToken(user);
         return new AuthResponse(jwtToken);

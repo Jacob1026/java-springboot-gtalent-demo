@@ -10,6 +10,7 @@ import com.gtalent.demo.responses.SupplierResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,6 +49,8 @@ public class SupplierController {
      * POST請求成功後，標準的 RESTful 回應是 201 Created
      */
     @PostMapping
+//    可以在這裡設定權限
+//    @PreAuthorize("hasRole('SUPPLIERS')")
     public ResponseEntity<SupplierResponse> createSupplier(@RequestBody SupplierRequest request) {
         // 1. 根據請求(request)建立一個新的 Supplier 實體物件
         Supplier newSupplier = new Supplier();
