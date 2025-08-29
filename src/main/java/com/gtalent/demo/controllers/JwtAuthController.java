@@ -23,7 +23,7 @@ public class JwtAuthController {
     @Autowired
     private AuthService authService;
 
-    @Operation(summary ="JWT註冊" ,description ="1.username不能重複 2.密碼長度要超過8字元 3.必須提供用戶角色，以ROLE_ 開頭(ROLE_USER)")
+    @Operation(summary ="JWT註冊" ,description ="1.username不能重複 <br /> 2.密碼長度要超過8字元 <br /> 3.必須提供用戶角色，以ROLE_ 開頭(ROLE_USER)<br />")
     @ApiResponses(value ={
             @ApiResponse(responseCode = "200",description = "操作成功"),
             @ApiResponse(responseCode = "401",description = "資料格式不正確"),

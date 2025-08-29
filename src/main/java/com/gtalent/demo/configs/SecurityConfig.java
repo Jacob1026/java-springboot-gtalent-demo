@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v2/users/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/v2/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/v2/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/suppliers/**").permitAll()
                         .requestMatchers("/suppliers/**").hasRole("SUPPLIER")
                         .anyRequest().authenticated()

@@ -14,7 +14,8 @@ public class SpringDocConfig {
 
     @Bean
     public OpenAPI openAPI(){
-        return new OpenAPI().info(new Info()
+        return new OpenAPI()
+                .info(new Info()
                         .title("demo")
                         .description("練習swagger docs")
                         .version("v1.0.1")
