@@ -31,7 +31,7 @@ public class JwtAuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegistrationRequest request) {
-        if(request.getPassword().length() <8 || request.getRole().startsWith("ROLE_")){
+        if(request.getPassword().length() <8 || !request.getRole().startsWith("ROLE_")){
             //401
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
